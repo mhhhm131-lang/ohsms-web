@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>OHSMS – مركز التوعية والتثقيف</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<header class="top-header">
+<h1>مركز التوعية والتثقيف</h1>
+<p>شبكة بطاقات بنمط Pinterest + فلاتر + بحث + نافذة عرض</p>
+</header>
+
+<div class="main-wrapper">
+ <aside class="sidebar">
+<h3>القائمة الرئيسية</h3>
+
+<a class="nav-link" href="index.html" data-perm="view_home">الصفحة الرئيسية</a>
+<a class="nav-link" href="reports.html" data-perm="view_reports">نظام البلاغات / سجل المتابعة</a>
+<a class="nav-link" href="risk.html" data-perm="view_risks">إدارة المخاطر</a>
+<a class="nav-link" href="awareness.html" data-perm="view_awareness">التوعية والتثقيف</a>
+<a class="nav-link" href="vendors.html" data-perm="view_partners">العملاء والشركاء</a>
+<a class="nav-link" href="forms.html" data-perm="view_forms">النماذج الرقمية</a>
+<a class="nav-link" href="dashboard.html" data-perm="view_dashboard">لوحة التحكم</a>
+<a class="nav-link" href="admin.html" data-perm="view_system">إدارة النظام</a>
+
+</aside>
+ 
+
+<main class="content">
+<section class="card">
+<h2>🎓 مركز التوعية والتثقيف</h2>
+<div class="grid-3">
+  <div><label>بحث</label><input id="aw-search" class="input" placeholder="ابحث…"></div>
+  <div><label>القسم</label><select id="aw-category" class="input">
+    <option value="">كل الأقسام</option>
+    <option>السلامة المهنية</option>
+    <option>مكافحة الحريق</option>
+    <option>الإسعافات الأولية</option>
+    <option>الصحة النفسية</option>
+    <option>البيئة والاستدامة</option>
+    <option>الأمن السيبراني</option>
+  </select></div>
+  <div><label>النوع</label><select id="aw-type" class="input">
+    <option value="">كل الأنواع</option>
+    <option>فيديو</option><option>PDF</option><option>صورة</option>
+    <option>مقال</option><option>منشور</option><option>تعليمات</option>
+  </select></div>
+</div>
+</section>
+
+<section class="card">
+<div class="aw-layout">
+  <div class="aw-filters">
+    <h3>فلاتر إضافية</h3>
+    <label>الجمهور</label><select id="aw-audience" class="input">
+      <option value="">الجميع</option>
+      <option>الموظفين</option><option>المشرفين</option>
+      <option>الإدارة</option><option>الزوار</option>
+    </select>
+    <label>المستوى</label><select id="aw-level" class="input">
+      <option value="">الكل</option><option>أساسي</option>
+      <option>متوسط</option><option>متقدم</option>
+    </select>
+    <label>السنة</label><select id="aw-year" class="input">
+      <option value="">الكل</option><option>2023</option>
+      <option>2024</option><option>2025</option>
+    </select>
+  </div>
+
+  <div>
+    <div id="aw-grid" class="aw-grid"></div>
+    <p id="aw-empty" class="empty" style="display:none;">لا توجد نتائج.</p>
+  </div>
+</div>
+</section>
+</main>
+</div>
+
+<div id="aw-modal" class="aw-modal aw-hidden">
+  <div class="aw-modal-box">
+    <button id="aw-modal-close" class="btn btn-secondary btn-small">إغلاق ✕</button>
+    <h3 id="aw-modal-title"></h3>
+    <p id="aw-modal-meta"></p>
+    <div id="aw-modal-media"></div>
+    <p id="aw-modal-desc"></p>
+    <p id="aw-modal-tags"></p>
+    <p id="aw-modal-views"></p>
+  </div>
+</div>
+
+<script src="assets/js/awareness.js"></script>
+
+<script src="assets/js/system.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const user = ohsmsGetCurrentUser();
+
+  if(!user){
+    alert("الرجاء تسجيل الدخول أولاً");
+    location.href = "login.html";
+    return;
+  }
+
+  if(!ohsmsHasPermission("view_awareness")){
+    alert("غير مصرح لك بالدخول إلى التوعية والتثقيف");
+    location.href = "index.html";
+    return;
+  }
+
+});
+
+</script>
+
+</body>
+</html>

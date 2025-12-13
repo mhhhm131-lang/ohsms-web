@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>OHSMS – العملاء والشركاء (الشركات المتعاقدة)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<header class="top-header">
+  <h1>نظام إدارة السلامة والصحة المهنية – OHSMS</h1>
+  <p>إدارة الشركات المتعاقدة والمورّدين</p>
+</header>
+
+<div class="main-wrapper">
+  <aside class="sidebar">
+<h3>القائمة الرئيسية</h3>
+
+<a class="nav-link" href="index.html" data-perm="view_home">الصفحة الرئيسية</a>
+<a class="nav-link" href="reports.html" data-perm="view_reports">نظام البلاغات / سجل المتابعة</a>
+<a class="nav-link" href="risk.html" data-perm="view_risks">إدارة المخاطر</a>
+<a class="nav-link" href="awareness.html" data-perm="view_awareness">التوعية والتثقيف</a>
+<a class="nav-link" href="vendors.html" data-perm="view_partners">العملاء والشركاء</a>
+<a class="nav-link" href="forms.html" data-perm="view_forms">النماذج الرقمية</a>
+<a class="nav-link" href="dashboard.html" data-perm="view_dashboard">لوحة التحكم</a>
+<a class="nav-link" href="admin.html" data-perm="view_system">إدارة النظام</a>
+
+</aside>
+
+  <main class="content">
+    <section class="card">
+      <h2><span class="emoji">🤝</span> إدارة الشركات المتعاقدة والمورّدين</h2>
+      <p class="hint">
+        من هذه الصفحة يمكن إدارة بيانات الشركات المتعاقدة، متابعة وثائق السلامة والتراخيص،
+        ومراقبة تواريخ الانتهاء وتقييم أداء الشركات.
+      </p>
+
+      <div class="kpi-grid" id="vendorsKpi">
+        <!-- KPIs injected by JS -->
+      </div>
+    </section>
+
+    <section class="card">
+      <h2><span class="emoji">🔎</span> البحث والتصفية</h2>
+      <div class="vendor-filters">
+        <div>
+          <label>بحث باسم الشركة أو الشخص المسؤول</label>
+          <input id="vendorSearch" class="input" placeholder="اكتب جزءًا من الاسم أو المسؤول...">
+        </div>
+        <div>
+          <label>نوع الشركة</label>
+          <select id="vendorTypeFilter" class="input">
+            <option value="">كل الأنواع</option>
+            <option value="مقاول رئيسي">مقاول رئيسي</option>
+            <option value="مقاول فرعي">مقاول فرعي</option>
+            <option value="مورد">مورد</option>
+            <option value="استشاري">استشاري</option>
+          </select>
+        </div>
+        <div>
+          <label>حالة الوثائق</label>
+          <select id="vendorDocStatusFilter" class="input">
+            <option value="">كل الحالات</option>
+            <option value="valid">وثائق سارية</option>
+            <option value="warning">تنبيه (تنتهي قريبًا)</option>
+            <option value="expired">وثائق منتهية</option>
+          </select>
+        </div>
+        <div>
+          <label>الحد الأدنى للتقييم</label>
+          <select id="vendorRatingFilter" class="input">
+            <option value="">بدون فلتر</option>
+            <option value="1">⭐ وأعلى</option>
+            <option value="2">⭐ ⭐ وأعلى</option>
+            <option value="3">⭐ ⭐ ⭐ وأعلى</option>
+            <option value="4">⭐ ⭐ ⭐ ⭐ وأعلى</option>
+            <option value="5">⭐ ⭐ ⭐ ⭐ ⭐ فقط</option>
+          </select>
+        </div>
+        <div class="vendor-filters-actions">
+          <button id="vendorAddBtn" class="btn btn-primary">➕ إضافة شركة متعاقدة</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2><span class="emoji">🏢</span> الشركات المتعاقدة والمورّدون</h2>
+      <div id="vendorsGrid" class="vendor-grid"></div>
+      <p id="vendorsEmpty" class="empty" style="display:none;">لا توجد شركات مطابقة لمعايير البحث الحالية.</p>
+    </section>
+  </main>
+</div>
+
+<!-- نافذة إضافة/تعديل شركة -->
+<div id="vendorModal" class="aw-modal aw-hidden">
+  <div class="aw-modal-box">
+    <button id="vendorModalClose" class="btn btn-secondary btn-small" style="float:left;">إغلاق ✕</button>
+    <div style="clear:both;"></div>
+    <h3 id="vendorModalTitle">إضافة شركة متعاقدة</h3>
+    <form id="vendorForm">
+      <input type="hidden" id="vendorId">
+      <div class="grid-3">
+        <div>
+          <label>اسم الشركة</label>
+          <input id="vendorName" class="input" required>
+        </div>
+        <div>
+          <label>نوع الشركة</label>
+          <select id="vendorType" class="input" required>
+            <option value="">اختر النوع</option>
+            <option value="مقاول رئيسي">مقاول رئيسي</option>
+            <option value="مقاول فرعي">مقاول فرعي</option>
+            <option value="مورد">مورد</option>
+            <option value="استشاري">استشاري</option>
+          </select>
+        </div>
+        <div>
+          <label>رقم السجل التجاري / الترخيص</label>
+          <input id="vendorCR" class="input">
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div>
+          <label>اسم الشخص المسؤول</label>
+          <input id="vendorContactName" class="input">
+        </div>
+        <div>
+          <label>جوال الشخص المسؤول</label>
+          <input id="vendorContactMobile" class="input">
+        </div>
+        <div>
+          <label>المدينة / المنطقة</label>
+          <input id="vendorCity" class="input">
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div>
+          <label>رقم التواصل الرئيسي</label>
+          <input id="vendorPhone" class="input">
+        </div>
+        <div>
+          <label>البريد الإلكتروني</label>
+          <input id="vendorEmail" class="input">
+        </div>
+        <div>
+          <label>تقييم الشركة (1–5)</label>
+          <input id="vendorRating" type="number" min="1" max="5" class="input" value="3">
+        </div>
+      </div>
+
+      <label>ملاحظات عامة</label>
+      <textarea id="vendorNotes" class="textarea"></textarea>
+
+      <div style="margin-top:12px;display:flex;justify-content:flex-end;gap:8px;align-items:center;">
+        <button type="button" id="vendorDeleteBtn" class="btn btn-outline btn-small" style="display:none;">🗑 حذف الشركة</button>
+        <button type="submit" class="btn btn-primary">💾 حفظ</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- نافذة إدارة الوثائق -->
+<div id="docsModal" class="aw-modal aw-hidden">
+  <div class="aw-modal-box">
+    <button id="docsModalClose" class="btn btn-secondary btn-small" style="float:left;">إغلاق ✕</button>
+    <div style="clear:both;"></div>
+    <h3 id="docsModalTitle">وثائق الشركة</h3>
+    <p class="hint">يمكن من هنا إضافة أو تعديل أو حذف الوثائق المرتبطة بالشركة (مثل شهادات السلامة، التأمين، التراخيص...).</p>
+
+    <div class="table-wrapper" style="margin-top:8px;">
+      <table class="reports">
+        <thead>
+          <tr>
+            <th>نوع الوثيقة</th>
+            <th>رقم الوثيقة</th>
+            <th>تاريخ الإصدار</th>
+            <th>تاريخ الانتهاء</th>
+            <th>الحالة</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="docsTableBody"></tbody>
+      </table>
+    </div>
+
+    <p id="docsEmpty" class="empty">لا توجد وثائق مسجلة حتى الآن.</p>
+
+    <h4 style="margin-top:12px;">➕ إضافة / تعديل وثيقة</h4>
+    <form id="docForm" class="grid-4">
+      <input type="hidden" id="docIndex">
+      <div>
+        <label>نوع الوثيقة</label>
+        <input id="docType" class="input" placeholder="مثال: شهادة سلامة">
+      </div>
+      <div>
+        <label>رقم الوثيقة</label>
+        <input id="docNumber" class="input">
+      </div>
+      <div>
+        <label>تاريخ الإصدار</label>
+        <input id="docIssue" type="date" class="input">
+      </div>
+      <div>
+        <label>تاريخ الانتهاء</label>
+        <input id="docExpiry" type="date" class="input">
+      </div>
+      <div style="grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;margin-top:8px;">
+        <button type="button" id="docResetBtn" class="btn btn-secondary btn-small">مسح الحقول</button>
+        <button type="submit" class="btn btn-primary btn-small">💾 حفظ الوثيقة</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/js/vendors.js"></script>
+
+<script src="assets/js/system.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const user = ohsmsGetCurrentUser();
+    if(!user){
+        alert("الرجاء تسجيل الدخول أولاً");
+        location.href="login.html";
+        return;
+    }
+
+    if(!ohsmsHasPermission("view_partners")){
+        alert("غير مصرح لك بالدخول إلى العملاء والشركاء");
+        location.href = "index.html";
+        return;
+    }
+
+});
+</script>
+
+</body>
+</html>

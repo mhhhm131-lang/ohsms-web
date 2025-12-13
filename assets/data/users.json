@@ -1,0 +1,58 @@
+[
+  {
+    "username": "admin",
+    "password": "1234",
+    "fullNameAr": "مدير النظام",
+    "fullNameEn": "System Administrator",
+    "role": "system_admin"
+  },
+  {
+    "username": "system",
+    "password": "1234",
+    "fullNameAr": "موظف نظام تجريبي",
+    "fullNameEn": "System Staff",
+    "role": "system_staff"
+  },
+  {
+    "username": "board",
+    "password": "1234",
+    "fullNameAr": "عضو إدارة عليا تجريبي",
+    "fullNameEn": "Board Member",
+    "role": "high_management"
+  },
+  {
+    "username": "committee",
+    "password": "1234",
+    "fullNameAr": "عضو لجنة السلامة والصحة المهنية تجريبي",
+    "fullNameEn": "OHS Committee Member",
+    "role": "ohsms_committee"
+  },
+  {
+    "username": "manager",
+    "password": "1234",
+    "fullNameAr": "مدير فرع / إدارة / قسم تجريبي",
+    "fullNameEn": "Branch / Department Manager",
+    "role": "branch_manager"
+  },
+  {
+    "username": "coordinator",
+    "password": "1234",
+    "fullNameAr": "منسق سلامة / منسق فرع تجريبي",
+    "fullNameEn": "Safety / Branch Coordinator",
+    "role": "safety_coordinator"
+  },
+  {
+    "username": "employee",
+    "password": "1234",
+    "fullNameAr": "موظف فرع / إدارة / قسم تجريبي",
+    "fullNameEn": "Branch Employee",
+    "role": "employee"
+  },
+  {
+    "username": "partner",
+    "password": "1234",
+    "fullNameAr": "عميل / شريك تجريبي",
+    "fullNameEn": "Customer / Partner",
+    "role": "partner"
+  }
+]
