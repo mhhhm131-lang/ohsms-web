@@ -51,14 +51,14 @@ function renderTables(){
     <td>${r.subCategory||''}</td>
 
     <td>
-      <button class="btn btn-small"
+      <button class="btn btn-small btn-view"
         onclick="openModal('مسببات الخطر', '${escapeHtml(r.hazardCause)}')">
         🔍 عرض
       </button>
     </td>
 
     <td>
-      <button class="btn btn-small"
+      <button class="btn btn-small btn-view "
         onclick="openModal('المتأثرون', '${escapeHtml(r.affected)}')">
         👥 عرض
       </button>
@@ -74,14 +74,14 @@ function renderTables(){
     </td>
 
     <td>
-      <button class="btn btn-small"
+      <button class="btn btn-small btn-view "
         onclick="openModal('الإجراء التصحيحي', '${escapeHtml(r.correctiveAction)}')">
         🔧 عرض
       </button>
     </td>
 
     <td>
-      <button class="btn btn-small"
+      <button class="btn btn-small btn-view "
         onclick="openModal('الإجراء الوقائي', '${escapeHtml(r.preventiveAction)}')">
         🛡️ عرض
       </button>
@@ -91,7 +91,9 @@ function renderTables(){
     <td>${r.ownerPerson||''}</td>
 
     <td>
-      <button class="btn btn-small"
+    <button class="btn btn-small btn-view 
+        onclick="openModal('الإجراء الوقائي', '${escapeHtml(r.preventiveAction)}')">
+    
         onclick="openModal('قناة التواصل', '${escapeHtml(r.channel)}')">
         📞 عرض
       </button>
