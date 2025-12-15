@@ -298,3 +298,44 @@ function ohsmsHasPermission(permission){
 
   return role.permissions.includes(permission);
 }
+// ======================================================
+//  LOGIN HANDLER (GLOBAL)
+// ======================================================
+window.ohsmsHandleLogin = async function(form, lang){
+  const usernameInput =
+    form.querySelector('input[name="username"]') ||
+    form.querySelector('#username');
+
+  const passwordInput =
+    form.querySelector('input[name="password"]') ||
+    form.querySelector('#password');
+
+  if(!usernameInput || !passwordInput){
+    alert("حقول تسجيل الدخول غير مكتملة");
+    return;
+  }
+
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value.trim();
+
+  if(!username || !password){
+    alert("الرجاء إدخال اسم المستخدم وكلمة المرور");
+    return;
+  }
+
+  const users = await ohsmsLoadUsers();
+  const user = users.find(
+    u => u.username === username && u.password === password
+  );
+
+  if(!user){
+    alert("اسم المستخدم أو كلمة المرور غير صحيحة");
+    return;
+  }
+
+  // حفظ المستخدم في الجلسة
+  ohsmsSetCurrentUser(user);
+
+  // الانتقال للصفحة الرئيسية
+  location.href = "index.html";
+};
