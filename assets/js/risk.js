@@ -67,11 +67,15 @@ function renderTables(){
     <td>${r.likelihood||''}</td>
     <td>${r.severity||''}</td>
 
-    <td>
-      <span class="risk ${r.rating>=12?'high':r.rating>=6?'medium':'low'}">
-        ${r.rating||''}
-      </span>
-    </td>
+   <td>
+  <span class="risk-badge ${
+    r.rating >= 12 ? 'risk-high' :
+    r.rating >= 6  ? 'risk-medium' :
+                     'risk-low'
+  }">
+    ${r.rating}
+  </span>
+</td>
 
     <td>
       <button class="btn btn-small btn-view "
