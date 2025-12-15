@@ -152,20 +152,23 @@
       <p class="hint">يعرض هذا السجل المخاطر العامة التي يمكن استخدامها في التوعية والاطلاع العام.</p>
       <div class="table-wrapper">
         <table class="reports" id="publicRisksTable">
-          <thead>
-            <tr>
-              <th>رقم الخطر</th>
-              <th>الفئة الرئيسية</th>
-              <th>الفئة الفرعية</th>
-              <th>مسببات الخطر</th>
-              <th>الشدة</th>
-              <th>الاحتمالية</th>
-              <th>التقييم</th>
-              <th>الإجراء الوقائي</th>
-              <th>الإجراء التصحيحي</th>
-              <th>المتأثرون</th>
-            </tr>
-          </thead>
+         <thead>
+  <tr>
+    <th>رقم الخطر</th>
+    <th>الفئة الرئيسية</th>
+    <th>الفئة الفرعية</th>
+    <th>مسببات الخطر</th>
+    <th>المتأثرون</th>
+    <th>الاحتمالية</th>
+    <th>الشدة</th>
+    <th>التقييم</th>
+    <th>الإجراء التصحيحي</th>
+    <th>الإجراء الوقائي</th>
+    <th>الإدارة المسؤولة</th>
+    <th>الموظف</th>
+    <th>قناة التواصل</th>
+  </tr>
+</thead>
           <tbody></tbody>
         </table>
       </div>
@@ -226,6 +229,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script>
+
+<div id="riskModal" class="modal hidden">
+  <div class="modal-box">
+    <h3 id="modalTitle"></h3>
+    <div id="modalContent" class="info-block"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">إغلاق</button>
+    </div>
+  </div>
+</div>
+
 
 
 </body>
