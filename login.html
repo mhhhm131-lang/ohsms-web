@@ -90,25 +90,23 @@ body{
   <h2>الدخول إلى نظام OHSMS</h2>
   <p style="margin-top:8px;color:#475569">فضلاً أدخل بيانات الدخول</p>
 
-  <form id="loginForm">
+ <form id="loginForm">
 
-    <label>اسم المستخدم</label>
-    <input id="loginUsername" placeholder="admin">
+  <label>اسم المستخدم</label>
+  <input id="username" name="username" placeholder="admin">
 
-    <label style="margin-top:12px;">كلمة المرور</label>
-    <input id="loginPassword" type="password" placeholder="كلمة المرور">
+  <label style="margin-top:12px;">كلمة المرور</label>
+  <input id="password" name="password" type="password" placeholder="كلمة المرور">
 
-    <button type="submit">تسجيل الدخول</button>
+  <button type="submit">تسجيل الدخول</button>
 
-    <div class="login-small" style="margin-top:12px;">
-      حسابات تجريبية: admin / system / employee كلمة المرور = 1234
-    </div>
+  <div class="login-small" style="margin-top:12px;">
+    حسابات تجريبية: admin / system / employee  
+    كلمة المرور = 1234
+  </div>
 
-    <div class="login-small" style="margin-top:14px;">
-      <a href="index.html" style="color:#0b3d90;font-weight:bold;">العودة للصفحة الرئيسية</a>
-    </div>
+</form>
 
-  </form>
 </div>
 
 <script src="assets/js/system.js"></script>

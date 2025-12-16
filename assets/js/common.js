@@ -155,3 +155,34 @@ function submitUrgent(){
   document.getElementById('homeMsg').textContent =
     'تم تسجيل بلاغ عاجل بنجاح، رقم البلاغ: ' + report.id;
 }
+// ===============================
+// Workflow – Step Notes
+// ===============================
+
+function saveCurrentStepNote(reportId, stepIndex, noteText) {
+  if (!reportId || stepIndex === undefined) {
+    console.error("Invalid parameters for saveCurrentStepNote");
+    return;
+  }
+
+  const reports = JSON.parse(localStorage.getItem("ohsms_reports") || "[]");
+
+  const report = reports.find(r => r.id === reportId);
+  if (!report) {
+    console.error("Report not found:", reportId);
+    return;
+  }
+
+  if (!report.workflow) {
+    report.workflow = [];
+  }
+
+  if (!report.workflow[stepIndex]) {
+    report.workflow[stepIndex] = {};
+  }
+
+  report.workflow[stepIndex].note = noteText;
+  report.workflow[stepIndex].updatedAt = new Date().toISOString();
+
+  localStorage.setItem("ohsms_reports", JSON.stringify(reports));
+}

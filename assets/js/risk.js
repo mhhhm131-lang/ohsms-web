@@ -44,21 +44,68 @@ function renderTables(){
   document.getElementById('privateEmpty').style.display = prv.length ? 'none':'block';
 
   pub.forEach(r=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${r.id}</td>
-      <td>${r.mainCategory||''}</td>
-      <td>${r.subCategory||''}</td>
-      <td>${r.hazardCause||''}</td>
-      <td>${r.severity||''}</td>
-      <td>${r.likelihood||''}</td>
-      <td>${r.rating||''}</td>
-      <td>${r.preventiveAction||''}</td>
-      <td>${r.correctiveAction||''}</td>
-      <td>${r.affected||''}</td>
-    `;
-    pubBody.appendChild(tr);
-  });
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${r.id}</td>
+    <td>${r.mainCategory||''}</td>
+    <td>${r.subCategory||''}</td>
+
+    <td>
+      <button class="btn btn-small btn-view"
+        onclick="openModal('مسببات الخطر', '${escapeHtml(r.hazardCause)}')">
+        🔍 عرض
+      </button>
+    </td>
+
+    <td>
+      <button class="btn btn-small btn-view "
+        onclick="openModal('المتأثرون', '${escapeHtml(r.affected)}')">
+        👥 عرض
+      </button>
+    </td>
+
+    <td>${r.likelihood||''}</td>
+    <td>${r.severity||''}</td>
+
+   <td>
+  <span class="risk-badge ${
+    r.rating >= 12 ? 'risk-high' :
+    r.rating >= 6  ? 'risk-medium' :
+                     'risk-low'
+  }">
+    ${r.rating}
+  </span>
+</td>
+
+    <td>
+      <button class="btn btn-small btn-view "
+        onclick="openModal('الإجراء التصحيحي', '${escapeHtml(r.correctiveAction)}')">
+        🔧 عرض
+      </button>
+    </td>
+
+    <td>
+      <button class="btn btn-small btn-view "
+        onclick="openModal('الإجراء الوقائي', '${escapeHtml(r.preventiveAction)}')">
+        🛡️ عرض
+      </button>
+    </td>
+
+    <td>${r.ownerDept||''}</td>
+    <td>${r.ownerPerson||''}</td>
+
+    <td>
+    <button class="btn btn-small btn-view 
+        onclick="openModal('الإجراء الوقائي', '${escapeHtml(r.preventiveAction)}')">
+    
+        onclick="openModal('قناة التواصل', '${escapeHtml(r.channel)}')">
+        📞 عرض
+      </button>
+    </td>
+  `;
+  pubBody.appendChild(tr);
+});
+
 
   prv.forEach(r=>{
     const tr = document.createElement('tr');
@@ -203,3 +250,34 @@ document.addEventListener('DOMContentLoaded', function(){
   renderTables();
   renderPendingRisks();
 });
+function escapeHtml(text){
+  if(!text) return '—';
+  return text
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+// ===============================
+// Global Modal Functions (PUBLIC)
+// ===============================
+window.openModal = function(title, content){
+  const titleEl = document.getElementById('modalTitle');
+  const contentEl = document.getElementById('modalContent');
+  const modal = document.getElementById('riskModal');
+
+  if(!modal) {
+    console.error("riskModal not found");
+    return;
+  }
+
+  titleEl.textContent = title || '';
+  contentEl.textContent = content || '—';
+  modal.classList.remove('hidden');
+};
+
+window.closeModal = function(){
+  const modal = document.getElementById('riskModal');
+  if(modal) modal.classList.add('hidden');
+};
