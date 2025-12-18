@@ -336,6 +336,19 @@ function loadAdminPage(page){
     </div>
   </div>
 </div>
+<script>
+  if (typeof saveHomePolicy !== "function") {
+    window.saveHomePolicy = function () {
+      const ta = document.getElementById("policyEditorText");
+      if (!ta) {
+        alert("❌ حقل السياسة غير موجود");
+        return;
+      }
+      localStorage.setItem("home_policy", ta.value.trim());
+      alert("✅ تم الحفظ");
+    };
+  }
+</script>
 
 </body>
 </html>
