@@ -284,7 +284,8 @@ function applyEmbeddedStyles(){
     const style = doc.createElement('style');
     style.id = 'embeddedStyles';
     style.textContent = `
-      .top-header, .sidebar { display:none !important; }
+      .top-header { display:none !important; }
+
       .main-wrapper { display:block !important; max-width:none !important; margin:0 !important; padding:0 !important; }
       .content { padding:0 !important; }
     `;
