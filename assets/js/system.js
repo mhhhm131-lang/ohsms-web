@@ -339,3 +339,58 @@ window.ohsmsHandleLogin = async function(form, lang){
   // الانتقال للصفحة الرئيسية
   location.href = "index.html";
 };
+// ===== إدارة محتوى الصفحة الرئيسية (مدير النظام فقط) =====
+document.addEventListener("DOMContentLoaded", () => {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+
+  // إظهار لوحة إدارة الصفحة الرئيسية لمدير النظام فقط
+  if (user && user.role === "system_admin") {
+    const panel = document.getElementById("homeAdminPanel");
+    if (panel) panel.style.display = "block";
+  }
+
+  // تحميل المحتوى المحفوظ إن وُجد
+  const saved = localStorage.getItem("homeContent");
+  if (saved) {
+    const data = JSON.parse(saved);
+
+    if (document.getElementById("policyInput"))
+      document.getElementById("policyInput").value = data.policy || "";
+
+    if (document.getElementById("goalsInput"))
+      document.getElementById("goalsInput").value = data.goals || "";
+
+    if (document.getElementById("scopeInput"))
+      document.getElementById("scopeInput").value = data.scope || "";
+  }
+});
+
+// حفظ محتوى الصفحة الرئيسية
+function saveHomeContent() {
+  const data = {
+    policy: document.getElementById("policyInput").value,
+    goals: document.getElementById("goalsInput").value,
+    scope: document.getElementById("scopeInput").value
+  };
+
+  localStorage.setItem("homeContent", JSON.stringify(data));
+  alert("تم حفظ محتوى الصفحة الرئيسية بنجاح");
+}
+// عرض محتوى الصفحة الرئيسية المحفوظ
+document.addEventListener("DOMContentLoaded", () => {
+  const saved = localStorage.getItem("homeContent");
+  if (!saved) return;
+
+  const data = JSON.parse(saved);
+
+  if (document.getElementById("policyText"))
+    document.getElementById("policyText").innerText = data.policy;
+
+  if (document.getElementById("goalsText")) {
+    document.getElementById("goalsText").innerHTML =
+      data.goals.split("\n").map(g => `<li>${g}</li>`).join("");
+  }
+
+  if (document.getElementById("scopeText"))
+    document.getElementById("scopeText").innerText = data.scope;
+});

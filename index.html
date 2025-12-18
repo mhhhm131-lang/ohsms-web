@@ -42,11 +42,11 @@
       <div class="grid-3">
         <div class="info-box info-policy">
           <strong>السياسة</strong>
-          <p>تلتزم المنشأة بتطبيق أعلى معايير السلامة والصحة المهنية.</p>
-        </div>
+ <p id="policyText">تلتزم المنشأة بتطبيق أعلى معايير السلامة والصحة المهنية.</p>
+       </div>
         <div class="info-box info-goals">
           <strong>الأهداف</strong>
-          <ul style="margin-right:18px;margin-top:4px">
+<ul id="goalsText" style="margin-right:18px;margin-top:4px">
             <li>تقليل الحوادث المهنية.</li>
             <li>رفع الوعي بالسلامة.</li>
             <li>تحسين الالتزام بالتعليمات.</li>
@@ -54,10 +54,25 @@
         </div>
         <div class="info-box info-scope">
           <strong>النطاق</strong>
-          <p>يشمل النظام جميع الفروع والإدارات والأنشطة التشغيلية.</p>
-        </div>
+ <p id="scopeText">يشمل النظام جميع الفروع والإدارات والأنشطة التشغيلية.</p>
+       </div>
       </div>
     </section>
+<!-- إدارة الصفحة الرئيسية (للمدير فقط) -->
+<div class="card admin-only" id="homeAdminPanel" style="display:none">
+  <h3>⚙️ إدارة محتوى الصفحة الرئيسية</h3>
+
+  <label>السياسة</label>
+  <textarea id="policyInput" rows="3"></textarea>
+
+  <label>الأهداف</label>
+  <textarea id="goalsInput" rows="3"></textarea>
+
+  <label>النطاق</label>
+  <textarea id="scopeInput" rows="3"></textarea>
+
+  <button class="btn primary" onclick="saveHomeContent()">💾 حفظ التغييرات</button>
+</div>
 
     <section class="card">
       <h2><span class="emoji">📝</span>إدخال بلاغ جديد</h2>

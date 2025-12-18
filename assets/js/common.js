@@ -198,3 +198,15 @@ function saveCurrentStepNote(reportId, stepIndex, noteText) {
     document.body.classList.add('embedded');
   }
 })();
+// ===== Embedded Mode (when page is opened inside iframe) =====
+(function(){
+  function isEmbedded(){
+    try { return window.self !== window.top; } catch(e){ return true; }
+  }
+
+  const params = new URLSearchParams(location.search);
+  if (isEmbedded() || params.get('embed') === '1'){
+    document.documentElement.classList.add('embedded');
+    document.body.classList.add('embedded');
+  }
+})();

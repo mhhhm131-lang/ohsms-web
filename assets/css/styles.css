@@ -1952,3 +1952,19 @@ body{
 .embedded .card{
   margin:0 0 12px 0;
 }
+/* ===== Embedded mode (inside admin iframe) ===== */
+.embedded .top-header,
+.embedded .sidebar{
+  display:none !important;
+}
+
+.embedded .main-wrapper{
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:block !important;
+}
+
+.embedded .content{
+  padding:0 !important;
+}
