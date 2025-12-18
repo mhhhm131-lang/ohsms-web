@@ -58,7 +58,7 @@
     </div>
 
     <div class="admin-view">
-      <iframe id="adminFrame" src="index.html" frameborder="0"></iframe>
+<iframe id="adminFrame" src="index.html?embed=1" frameborder="0"></iframe>
 </div>
   </div>
 </section>
@@ -265,10 +265,46 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script>
+function applyEmbeddedStyles(){
+  const frame = document.getElementById('adminFrame');
+  if(!frame) return;
+
+  try{
+    const doc = frame.contentDocument || frame.contentWindow.document;
+    if(!doc || !doc.head) return;
+
+    // لا تعيد الحقن أكثر من مرة
+    if(doc.getElementById('embeddedStyles')) return;
+
+    const style = doc.createElement('style');
+    style.id = 'embeddedStyles';
+    style.textContent = `
+      .top-header, .sidebar { display:none !important; }
+      .main-wrapper { display:block !important; max-width:none !important; margin:0 !important; padding:0 !important; }
+      .content { padding:0 !important; }
+    `;
+    doc.head.appendChild(style);
+  }catch(e){
+    // لو حصل خطأ وصول (نادر)، نتجاهله
+  }
+}
+
 function loadAdminPage(page){
   const frame = document.getElementById('adminFrame');
-  if(frame) frame.src = page;
+  if(!frame) return;
+
+  const url = page.includes('?') ? (page + '&embed=1') : (page + '?embed=1');
+  frame.src = url;
 }
+
+// تطبيق الإخفاء بعد كل تحميل داخل iframe
+document.addEventListener('DOMContentLoaded', () => {
+  const frame = document.getElementById('adminFrame');
+  if(frame){
+    frame.addEventListener('load', applyEmbeddedStyles);
+    setTimeout(applyEmbeddedStyles, 400);
+  }
+});
 </script>
 
 </body>
