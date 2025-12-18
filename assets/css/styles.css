@@ -1932,3 +1932,23 @@ body{
   height:75vh;
   border:none;
 }
+/* ===== Embedded mode (inside admin iframe) ===== */
+.embedded .top-header,
+.embedded .sidebar{
+  display:none !important;
+}
+
+.embedded .main-wrapper{
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:block !important; /* بدل grid */
+}
+
+.embedded .content{
+  padding:0 !important;
+}
+
+.embedded .card{
+  margin:0 0 12px 0;
+}

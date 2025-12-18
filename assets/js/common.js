@@ -186,3 +186,15 @@ function saveCurrentStepNote(reportId, stepIndex, noteText) {
 
   localStorage.setItem("ohsms_reports", JSON.stringify(reports));
 }
+(function(){
+  const params = new URLSearchParams(location.search);
+
+  function isEmbedded(){
+    try { return window.self !== window.top; } catch(e){ return true; }
+  }
+
+  if (isEmbedded() || params.get('embed') === '1'){
+    document.documentElement.classList.add('embedded');
+    document.body.classList.add('embedded');
+  }
+})();
