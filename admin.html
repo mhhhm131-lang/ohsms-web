@@ -45,6 +45,12 @@
 <section class="card">
   <h2>🧭 لوحة إدارة النظام الشاملة</h2>
   <p class="hint">اختر أحد أقسام النظام لعرضه داخل لوحة إدارة النظام.</p>
+  <div style="margin:10px 0;">
+  <button class="btn btn-primary" type="button" onclick="openPolicyEditor()">
+    ✏️ تعديل سياسة الصفحة الرئيسية
+  </button>
+</div>
+
 
   <div class="admin-layout">
     <div class="admin-tabs">
@@ -305,6 +311,28 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(applyEmbeddedStyles, 400);
   }
 });
+<div class="modal hidden" id="policyEditorModal">
+  <div class="modal-box wide">
+    <h3>✏️ تعديل سياسة الصفحة الرئيسية</h3>
+    <p class="modal-hint">
+      اكتب نص السياسة كما تريد أن يظهر في الصفحة الرئيسية للنظام.
+    </p>
+
+    <label>نص السياسة</label>
+    <textarea
+      id="policyEditorText"
+      class="input"
+      rows="6"
+      placeholder="اكتب سياسة السلامة والصحة المهنية هنا..."
+    ></textarea>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" type="button" onclick="saveHomePolicy()">💾 حفظ</button>
+      <button class="btn" type="button" onclick="closePolicyEditor()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
 </script>
 <script src="assets/js/system.js"></script>
 <script src="assets/js/common.js"></script>

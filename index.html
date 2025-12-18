@@ -42,8 +42,10 @@
       <div class="grid-3">
         <div class="info-box info-policy">
           <strong>السياسة</strong>
- <p id="policyText">تلتزم المنشأة بتطبيق أعلى معايير السلامة والصحة المهنية.</p>
-       </div>
+ <p id="homePolicyText">
+  تلتزم المنشأة بتطبيق أعلى معايير السلامة...
+</p>
+      </div>
         <div class="info-box info-goals">
           <strong>الأهداف</strong>
 <ul id="goalsText" style="margin-right:18px;margin-top:4px">
@@ -163,6 +165,16 @@ document.addEventListener("DOMContentLoaded", function () {
       item.style.display = "none";
     }
   });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const savedPolicy = localStorage.getItem("ohsms_home_policy");
+  if (savedPolicy) {
+    const el = document.getElementById("homePolicyText");
+    if (el) el.textContent = savedPolicy;
+  }
 });
 </script>
 

@@ -394,3 +394,36 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("scopeText"))
     document.getElementById("scopeText").innerText = data.scope;
 });
+// ================================
+// إدارة سياسة الصفحة الرئيسية
+// ================================
+
+function openPolicyEditor() {
+  const modal = document.getElementById("policyEditorModal");
+  const textarea = document.getElementById("policyEditorText");
+
+  if (!modal || !textarea) return;
+
+  // تحميل السياسة الحالية إن وجدت
+  const savedPolicy = localStorage.getItem("ohsms_home_policy");
+  textarea.value = savedPolicy || "";
+
+  modal.classList.remove("hidden");
+}
+
+function closePolicyEditor() {
+  const modal = document.getElementById("policyEditorModal");
+  if (modal) modal.classList.add("hidden");
+}
+
+function saveHomePolicy() {
+  const textarea = document.getElementById("policyEditorText");
+  if (!textarea) return;
+
+  const text = textarea.value.trim();
+  localStorage.setItem("ohsms_home_policy", text);
+
+  alert("✅ تم حفظ السياسة بنجاح");
+
+  closePolicyEditor();
+}
