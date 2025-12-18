@@ -427,3 +427,64 @@ function saveHomePolicy() {
 
   closePolicyEditor();
 }
+/* ===== Home Page Policy Editor ===== */
+
+function openHomePolicyEditor() {
+  document.getElementById("homePolicyModal").classList.remove("hidden");
+
+  document.getElementById("editPolicyText").value =
+    localStorage.getItem("home_policy") ||
+    document.getElementById("homePolicyText")?.innerText || "";
+
+  document.getElementById("editGoalsText").value =
+    localStorage.getItem("home_goals") || "";
+
+  document.getElementById("editScopeText").value =
+    localStorage.getItem("home_scope") ||
+    document.getElementById("homeScopeText")?.innerText || "";
+}
+
+function closeHomePolicyEditor() {
+  document.getElementById("homePolicyModal").classList.add("hidden");
+}
+
+function saveHomePolicy() {
+  const policy = document.getElementById("editPolicyText").value.trim();
+  const goals = document.getElementById("editGoalsText").value.trim();
+  const scope = document.getElementById("editScopeText").value.trim();
+
+  localStorage.setItem("home_policy", policy);
+  localStorage.setItem("home_goals", goals);
+  localStorage.setItem("home_scope", scope);
+
+  applyHomePolicy();
+  closeHomePolicyEditor();
+}
+
+function applyHomePolicy() {
+  const policy = localStorage.getItem("home_policy");
+  const goals = localStorage.getItem("home_goals");
+  const scope = localStorage.getItem("home_scope");
+
+  if (policy && document.getElementById("homePolicyText")) {
+    document.getElementById("homePolicyText").innerText = policy;
+  }
+
+  if (goals && document.getElementById("homeGoalsList")) {
+    const list = document.getElementById("homeGoalsList");
+    list.innerHTML = "";
+    goals.split("\n").forEach(g => {
+      if (g.trim()) {
+        const li = document.createElement("li");
+        li.innerText = g;
+        list.appendChild(li);
+      }
+    });
+  }
+
+  if (scope && document.getElementById("homeScopeText")) {
+    document.getElementById("homeScopeText").innerText = scope;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", applyHomePolicy);

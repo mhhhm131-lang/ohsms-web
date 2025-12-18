@@ -178,6 +178,27 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+<!-- Home Policy Editor Modal -->
+<div class="modal hidden" id="homePolicyModal">
+  <div class="modal-box wide">
+    <h3>✏️ تعديل محتوى الصفحة الرئيسية</h3>
+    <p class="modal-hint">يمكنك تعديل السياسة والأهداف والنطاق ثم حفظها.</p>
+
+    <label>السياسة</label>
+    <textarea id="editPolicyText" class="input" rows="3"></textarea>
+
+    <label>الأهداف (سطر لكل هدف)</label>
+    <textarea id="editGoalsText" class="input" rows="4"></textarea>
+
+    <label>النطاق</label>
+    <textarea id="editScopeText" class="input" rows="3"></textarea>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveHomePolicy()">💾 حفظ</button>
+      <button class="btn" onclick="closeHomePolicyEditor()">إلغاء</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
