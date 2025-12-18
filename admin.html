@@ -41,6 +41,28 @@
 
 
   <main class="content">
+
+<section class="card">
+  <h2>🧭 لوحة إدارة النظام الشاملة</h2>
+  <p class="hint">اختر أحد أقسام النظام لعرضه داخل لوحة إدارة النظام.</p>
+
+  <div class="admin-layout">
+    <div class="admin-tabs">
+      <button type="button" onclick="loadAdminPage('index.html')">الصفحة الرئيسية</button>
+      <button type="button" onclick="loadAdminPage('dashboard.html')">لوحة التحكم</button>
+      <button type="button" onclick="loadAdminPage('reports.html')">نظام البلاغات</button>
+      <button type="button" onclick="loadAdminPage('risk.html')">إدارة المخاطر</button>
+      <button type="button" onclick="loadAdminPage('awareness.html')">التوعية والتثقيف</button>
+      <button type="button" onclick="loadAdminPage('forms.html')">النماذج الرقمية</button>
+      <button type="button" onclick="loadAdminPage('vendors.html')">العملاء والشركاء</button>
+    </div>
+
+    <div class="admin-view">
+      <iframe id="adminFrame" src="index.html" frameborder="0"></iframe>
+    </div>
+  </div>
+</section>
+
     <section class="card">
       <h2>⚙️ إدارة النظام</h2>
       <p class="hint">
@@ -242,6 +264,12 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+<script>
+function loadAdminPage(page){
+  const frame = document.getElementById('adminFrame');
+  if(frame) frame.src = page;
+}
+</script>
 
 </body>
 </html>
