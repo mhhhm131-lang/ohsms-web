@@ -1,4 +1,7 @@
+const OHSMS_AUTH_KEY = "ohsms_current_user";
+
 function loadReports(){
+
   try {
     return JSON.parse(localStorage.getItem('reports') || '[]');
   } catch(e){
