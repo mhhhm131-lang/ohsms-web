@@ -95,3 +95,13 @@ function ohsmsProtectPage(requiredPermission) {
 document.addEventListener("DOMContentLoaded", () => {
   ohsmsApplyUserUI();
 });
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("[data-perm]").forEach(el => {
+    const perm = el.getAttribute("data-perm");
+    if (typeof ohsmsHasPermission === "function" && ohsmsHasPermission(perm)) {
+      el.style.display = "";
+    } else {
+      el.style.display = "none";
+    }
+  });
+});
