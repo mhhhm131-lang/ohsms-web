@@ -8,6 +8,10 @@
 //  - system_admin always has full access (*)
 // ======================================================
 
+// ===============================
+// AUTH STORAGE KEY (SYSTEM LEVEL)
+// ===============================
+const OHSMS_AUTH_KEY = "ohsms_current_user";
 
 // ======================================================
 //  AUTH STORAGE KEYS
