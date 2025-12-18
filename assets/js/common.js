@@ -1,212 +1,97 @@
-function loadReports(){
-  try {
-    return JSON.parse(localStorage.getItem('reports') || '[]');
-  } catch(e){
-    return [];
+/* =====================================================
+   OHSMS – COMMON AUTH & PERMISSIONS CORE
+   هذا الملف مشترك بين جميع الصفحات
+   أي خطأ هنا يؤثر على النظام كامل
+===================================================== */
+
+const OHSMS_AUTH_KEY = "ohsms_current_user";
+
+/* =====================
+   Session helpers
+===================== */
+function ohsmsSetCurrentUser(user) {
+  if (user) {
+    sessionStorage.setItem(OHSMS_AUTH_KEY, JSON.stringify(user));
+  } else {
+    sessionStorage.removeItem(OHSMS_AUTH_KEY);
   }
 }
 
-function saveReports(arr){
-  localStorage.setItem('reports', JSON.stringify(arr));
+function ohsmsGetCurrentUser() {
+  try {
+    return JSON.parse(sessionStorage.getItem(OHSMS_AUTH_KEY));
+  } catch (e) {
+    return null;
+  }
 }
 
-function generateReportId(){
-  const year = new Date().getFullYear();
-  const list = loadReports();
-  let max = 0;
+function ohsmsLogout() {
+  ohsmsSetCurrentUser(null);
+  location.href = "login.html";
+}
 
-  list.forEach(r => {
-   if (String(r.id).startsWith(String(year))) {
+/* =====================
+   Permission checker
+===================== */
+function ohsmsHasPermission(permission) {
+  if (typeof OHSMS_ROLES === "undefined") return false;
 
-      const p = r.id.split('-');
-      if (p.length === 2) {
-        const n = parseInt(p[1]);
-        if (!isNaN(n) && n > max) max = n;
-      }
+  const user = ohsmsGetCurrentUser();
+  if (!user) return false;
+
+  const role = OHSMS_ROLES[user.role];
+  if (!role) return false;
+
+  if (role.permissions.includes("*")) return true;
+  return role.permissions.includes(permission);
+}
+
+/* =====================
+   UI helpers (header & menu)
+===================== */
+function ohsmsApplyUserUI() {
+  const user = ohsmsGetCurrentUser();
+
+  // Header
+  const nameEl = document.getElementById("headerUserName");
+  const roleEl = document.getElementById("headerUserRole");
+
+  if (user && nameEl) {
+    nameEl.textContent = user.username;
+    if (roleEl && typeof OHSMS_ROLES !== "undefined") {
+      roleEl.textContent = OHSMS_ROLES[user.role]?.nameAr || "";
+    }
+  }
+
+  // Menu permissions
+  document.querySelectorAll("[data-perm]").forEach(el => {
+    const perm = el.getAttribute("data-perm");
+    if (!ohsmsHasPermission(perm)) {
+      el.style.display = "none";
     }
   });
-
-  const next = max + 1;
-  return year + '-' + String(next).padStart(4, '0');
 }
 
-function nowStr(){
-  return new Date().toLocaleString();
-}
+/* =====================
+   Page protection
+===================== */
+function ohsmsProtectPage(requiredPermission) {
+  const user = ohsmsGetCurrentUser();
 
-function resetMsg(){
-  const m = document.getElementById('homeMsg');
-  if (m) m.textContent = '';
-}
-
-function openModal(type){
-  resetMsg();
-  document.getElementById('modal-' + type).classList.remove('hidden');
-}
-
-function openUrgent(){
-  resetMsg();
-  document.getElementById('modal-urgent').classList.remove('hidden');
-}
-
-function closeModal(){
-  document.querySelectorAll('.modal')
-    .forEach(m => m.classList.add('hidden'));
-}
-
-function submitNormal(){
-  const desc = document.getElementById('n-desc').value.trim();
-  if (!desc) {
-    alert('الرجاء كتابة وصف البلاغ.');
+  if (!user) {
+    location.href = "login.html";
     return;
   }
 
-  const report = {
-    id: generateReportId(),
-    type: 'عادي',
-    reporterName: document.getElementById('n-name').value.trim() || 'غير محدد',
-    contact: document.getElementById('n-contact').value.trim() || 'غير محدد',
-    location: document.getElementById('n-location').value.trim() || 'غير محدد',
-    danger: document.getElementById('n-danger').value.trim() || '',
-    desc: desc,
-    reasonSecret: '',
-    statusIndex: 0,
-    status: 'تم إرسال البلاغ',
-    createdAt: nowStr(),
-    history: [{ action:'إدخال البلاغ (عادي)', note:'', at: nowStr() }],
-    escalationLevel: 0
-  };
-
-  const list = loadReports();
-  list.push(report);
-  saveReports(list);
-
-  closeModal();
-  document.getElementById('homeMsg').textContent =
-    'تم إرسال البلاغ بنجاح، رقم البلاغ: ' + report.id;
-
-  ['n-name','n-contact','n-location','n-danger','n-desc']
-    .forEach(id => document.getElementById(id).value = '');
+  if (requiredPermission && !ohsmsHasPermission(requiredPermission)) {
+    alert("غير مصرح لك بالدخول إلى هذه الصفحة");
+    location.href = "index.html";
+  }
 }
 
-function submitSecret(){
-  const desc = document.getElementById('s-desc').value.trim();
-  const reason = document.getElementById('s-reason').value.trim();
-
-  if (!desc) {
-    alert('الرجاء كتابة وصف البلاغ.');
-    return;
-  }
-  if (!reason) {
-    alert('الرجاء توضيح سبب اختيار البلاغ السري.');
-    return;
-  }
-
-  const report = {
-    id: generateReportId(),
-    type: 'سري',
-    reporterName: 'سري / غير معلن',
-    contact: 'غير متاح (بلاغ سري)',
-    location: document.getElementById('s-location').value.trim() || 'غير محدد',
-    danger: '',
-    desc: desc,
-    reasonSecret: reason,
-    statusIndex: 0,
-    status: 'تم إرسال البلاغ',
-    createdAt: nowStr(),
-    history: [{ action:'إدخال البلاغ (سري)', note:'', at: nowStr() }],
-    escalationLevel: 0
-  };
-
-  const list = loadReports();
-  list.push(report);
-  saveReports(list);
-
-  closeModal();
-  document.getElementById('homeMsg').textContent =
-    'تم إرسال البلاغ السري بنجاح، رقم البلاغ: ' + report.id;
-
-  ['s-location','s-desc','s-reason']
-    .forEach(id => document.getElementById(id).value = '');
-}
-
-function submitUrgent(){
-  const report = {
-    id: generateReportId(),
-    type: 'عاجل',
-    reporterName: 'غير محدد',
-    contact: 'يتم التواصل فوراً (بلاغ عاجل)',
-    location: 'غير محدد',
-    danger: '',
-    desc: 'بلاغ عاجل تم إدخاله من الواجهة الرئيسية.',
-    reasonSecret: '',
-    statusIndex: 0,
-    status: 'تم إرسال البلاغ',
-    createdAt: nowStr(),
-    history: [{ action:'تسجيل بلاغ عاجل', note:'', at: nowStr() }],
-    escalationLevel: 0
-  };
-
-  const list = loadReports();
-  list.push(report);
-  saveReports(list);
-
-  closeModal();
-  document.getElementById('homeMsg').textContent =
-    'تم تسجيل بلاغ عاجل بنجاح، رقم البلاغ: ' + report.id;
-}
-// ===============================
-// Workflow – Step Notes
-// ===============================
-
-function saveCurrentStepNote(reportId, stepIndex, noteText) {
-  if (!reportId || stepIndex === undefined) {
-    console.error("Invalid parameters for saveCurrentStepNote");
-    return;
-  }
-
-  const reports = JSON.parse(localStorage.getItem("ohsms_reports") || "[]");
-
-  const report = reports.find(r => r.id === reportId);
-  if (!report) {
-    console.error("Report not found:", reportId);
-    return;
-  }
-
-  if (!report.workflow) {
-    report.workflow = [];
-  }
-
-  if (!report.workflow[stepIndex]) {
-    report.workflow[stepIndex] = {};
-  }
-
-  report.workflow[stepIndex].note = noteText;
-  report.workflow[stepIndex].updatedAt = new Date().toISOString();
-
-  localStorage.setItem("ohsms_reports", JSON.stringify(reports));
-}
-(function(){
-  const params = new URLSearchParams(location.search);
-
-  function isEmbedded(){
-    try { return window.self !== window.top; } catch(e){ return true; }
-  }
-
-  if (isEmbedded() || params.get('embed') === '1'){
-    document.documentElement.classList.add('embedded');
-    document.body.classList.add('embedded');
-  }
-})();
-// ===== Embedded Mode (when page is opened inside iframe) =====
-(function(){
-  function isEmbedded(){
-    try { return window.self !== window.top; } catch(e){ return true; }
-  }
-
-  const params = new URLSearchParams(location.search);
-  if (isEmbedded() || params.get('embed') === '1'){
-    document.documentElement.classList.add('embedded');
-    document.body.classList.add('embedded');
-  }
-})();
+/* =====================
+   Auto init on load
+===================== */
+document.addEventListener("DOMContentLoaded", () => {
+  ohsmsApplyUserUI();
+});
