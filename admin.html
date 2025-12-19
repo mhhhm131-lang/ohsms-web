@@ -7,68 +7,11 @@
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-<header class="top-header">
-  <div class="top-header-main">
-    <div>
-      <h1>نظام إدارة السلامة والصحة المهنية – OHSMS</h1>
-      <p>إدارة النظام – المستخدمين والأدوار والصلاحيات</p>
-    </div>
-    <div class="header-user" id="headerUserBox">
-      <div class="header-user-text">
-        <span id="headerUserName">غير مسجل دخول</span>
-        <span id="headerUserRole" class="header-user-role"></span>
-      </div>
-      <button class="btn btn-secondary btn-small" type="button" onclick="ohsmsLogout()">تسجيل الخروج</button>
-    </div>
-  </div>
-</header>
+<header id="appHeader" class="top-header"></header>
 
 <div class="main-wrapper">
-<aside class="sidebar">
-<h3>القائمة الرئيسية</h3>
-
-<a class="nav-link" href="index.html" data-perm="view_home">الصفحة الرئيسية</a>
-<a class="nav-link" href="reports.html" data-perm="view_reports">نظام البلاغات / سجل المتابعة</a>
-<a class="nav-link" href="risk.html" data-perm="view_risks">إدارة المخاطر</a>
-<a class="nav-link" href="awareness.html" data-perm="view_awareness">التوعية والتثقيف</a>
-<a class="nav-link" href="vendors.html" data-perm="view_partners">العملاء والشركاء</a>
-<a class="nav-link" href="forms.html" data-perm="view_forms">النماذج الرقمية</a>
-<a class="nav-link" href="dashboard.html" data-perm="view_dashboard">لوحة التحكم</a>
-<a class="nav-link" href="admin.html" data-perm="view_system">إدارة النظام</a>
-
-</aside>
-
-
-
-  <main class="content">
-
-<section class="card">
-  <h2>🧭 لوحة إدارة النظام الشاملة</h2>
-  <p class="hint">اختر أحد أقسام النظام لعرضه داخل لوحة إدارة النظام.</p>
-  <div style="margin:10px 0;">
-  <button class="btn btn-primary" type="button" onclick="openPolicyEditor()">
-    ✏️ تعديل سياسة الصفحة الرئيسية
-  </button>
-</div>
-
-
-  <div class="admin-layout">
-    <div class="admin-tabs">
-      <button type="button" onclick="loadAdminPage('index.html')">الصفحة الرئيسية</button>
-      <button type="button" onclick="loadAdminPage('dashboard.html')">لوحة التحكم</button>
-      <button type="button" onclick="loadAdminPage('reports.html')">نظام البلاغات</button>
-      <button type="button" onclick="loadAdminPage('risk.html')">إدارة المخاطر</button>
-      <button type="button" onclick="loadAdminPage('awareness.html')">التوعية والتثقيف</button>
-      <button type="button" onclick="loadAdminPage('forms.html')">النماذج الرقمية</button>
-      <button type="button" onclick="loadAdminPage('vendors.html')">العملاء والشركاء</button>
-    </div>
-
-    <div class="admin-view">
-<iframe id="adminFrame" src="index.html?embed=1" frameborder="0"></iframe>
-</div>
-  </div>
-</section>
-
+ <div id="appSidebar" class="sidebar"></div>
+<main class="content">
     <section class="card">
       <h2>⚙️ إدارة النظام</h2>
       <p class="hint">
@@ -147,15 +90,6 @@
 
   <!-- Modals for users & roles management -->
   <div class="modal hidden" id="addUserModal">
-    <label>الفرع</label>
-<input type="text" id="newUserBranch" class="input" placeholder="مثال: فرع الرياض">
-
-<label>الإدارة</label>
-<input type="text" id="newUserDepartment" class="input" placeholder="مثال: إدارة التشغيل">
-
-<label>القسم</label>
-<input type="text" id="newUserSection" class="input" placeholder="مثال: قسم الصيانة">
-
     <div class="modal-box">
       <h3>إضافة مستخدم</h3>
       <p class="modal-hint">أدخل بيانات المستخدم الجديد وحدد دوره في النظام.</p>
@@ -249,106 +183,9 @@
     </div>
   </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const user = ohsmsGetCurrentUser();
-
-    if(!user){
-        alert("الرجاء تسجيل الدخول أولاً");
-        location.href="login.html";
-        return;
-    }
-
-    if(!ohsmsHasPermission("view_system")){
-        alert("غير مصرح لك بالدخول إلى إدارة النظام");
-        location.href = "index.html";
-        return;
-    }
-
-});
-</script>
-
-<script>
-function applyEmbeddedStyles(){
-  const frame = document.getElementById('adminFrame');
-  if(!frame) return;
-
-  try{
-    const doc = frame.contentDocument || frame.contentWindow.document;
-    if(!doc || !doc.head) return;
-
-    // لا تعيد الحقن أكثر من مرة
-    if(doc.getElementById('embeddedStyles')) return;
-
-    const style = doc.createElement('style');
-    style.id = 'embeddedStyles';
-    style.textContent = `
-      .top-header { display:none !important; }
-
-      .main-wrapper { display:block !important; max-width:none !important; margin:0 !important; padding:0 !important; }
-      .content { padding:0 !important; }
-    `;
-    doc.head.appendChild(style);
-  }catch(e){
-    // لو حصل خطأ وصول (نادر)، نتجاهله
-  }
-}
-
-function loadAdminPage(page){
-  const frame = document.getElementById('adminFrame');
-  if(!frame) return;
-
-  const url = page.includes('?') ? (page + '&embed=1') : (page + '?embed=1');
-  frame.src = url;
-}
-
-// تطبيق الإخفاء بعد كل تحميل داخل iframe
-document.addEventListener('DOMContentLoaded', () => {
-  const frame = document.getElementById('adminFrame');
-  if(frame){
-    frame.addEventListener('load', applyEmbeddedStyles);
-    setTimeout(applyEmbeddedStyles, 400);
-  }
-});
-</script>
+<script src="assets/js/app-config.js"></script>
+<script src="assets/js/app-shell.js"></script>
 <script src="assets/js/system.js"></script>
-<script src="assets/js/common.js"></script>
-<script>
-function loadAdminPage(page){
-  const frame = document.getElementById('adminFrame');
-  if(!frame) return;
-
-  const url = page.includes('?') ? page + '&embed=1' : page + '?embed=1';
-  frame.src = url;
-}
-</script>
-<div class="modal hidden" id="policyEditorModal">
-  <div class="modal-box wide">
-    <h3>✏️ تعديل سياسة الصفحة الرئيسية</h3>
-
-    <label>نص السياسة</label>
-    <textarea id="policyEditorText" class="input" rows="6"></textarea>
-
-    <div class="modal-actions">
-      <button class="btn btn-primary" onclick="saveHomePolicy()">حفظ</button>
-      <button class="btn" onclick="closePolicyEditor()">إلغاء</button>
-    </div>
-  </div>
-</div>
-<script>
-  if (typeof saveHomePolicy !== "function") {
-    window.saveHomePolicy = function () {
-      const ta = document.getElementById("policyEditorText");
-      if (!ta) {
-        alert("❌ حقل السياسة غير موجود");
-        return;
-      }
-      localStorage.setItem("home_policy", ta.value.trim());
-      alert("✅ تم الحفظ");
-    };
-  }
-</script>
 
 </body>
 </html>
