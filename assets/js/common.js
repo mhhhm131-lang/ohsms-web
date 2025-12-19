@@ -1,4 +1,3 @@
-const OHSMS_AUTH_KEY = "ohsms_current_user";
 
 function loadReports(){
 
