@@ -299,44 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
   </div>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, addDoc, collection, serverTimestamp } 
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAr3rWfrom-UYZ09Talx5vb6VRh2Q-9U",
-    authDomain: "ohsmsipa.firebaseapp.com",
-    projectId: "ohsmsipa",
-    storageBucket: "ohsmsipa.firebasestorage.app",
-    messagingSenderId: "161259414430",
-    appId: "1:161259414430:web:d7d1fe0d98a552f3c6ec8f"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  // مثال حفظ تقرير
-  window.saveReport = async () => {
-    const title = document.getElementById("title").value;
-    const description = document.getElementById("description").value;
-
-    try {
-      await addDoc(collection(db, "reports"), {
-        title,
-        description,
-        userId: auth.currentUser.uid,
-        createdAt: serverTimestamp()
-      });
-
-      alert("تم حفظ التقرير بنجاح");
-    } catch (e) {
-      alert("حدث خطأ أثناء الحفظ");
-    }
-  };
-</script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } 
@@ -358,7 +321,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const db = getFirestore(app);
 
   onAuthStateChanged(auth, async (user) => {
-    if (!user) return;
+   if (!user) {
+  location.href = "login.html";
+  return;
+}
 
     const container = document.getElementById("reports-table");
     container.innerHTML = "<p>جاري تحميل البلاغات...</p>";
