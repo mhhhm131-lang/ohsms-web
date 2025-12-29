@@ -199,6 +199,35 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
   </div>
 </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } 
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAr3rWfrom-UYZ09Talx5vb6VRh2Q-9U",
+    authDomain: "ohsmsipa.firebaseapp.com",
+    projectId: "ohsmsipa",
+    storageBucket: "ohsmsipa.firebasestorage.app",
+    messagingSenderId: "161259414430",
+    appId: "1:161259414430:web:d7d1fe0d98a552f3c6ec8f"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  document.getElementById("loginBtn").onclick = async () => {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      window.location.href = "dashboard.html";
+    } catch (e) {
+      alert("بيانات الدخول غير صحيحة");
+    }
+  };
+</script>
 
 </body>
 </html>
