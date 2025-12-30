@@ -92,8 +92,9 @@ body{
 
  <form id="loginForm">
 
-  <label>اسم المستخدم</label>
-  <input id="username" name="username" placeholder="admin">
+ <label>البريد الإلكتروني</label>
+<input id="email" name="email" type="email" placeholder="admin@ohsms.local" required>
+
 
   <label style="margin-top:12px;">كلمة المرور</label>
   <input id="password" name="password" type="password" placeholder="كلمة المرور">
@@ -108,21 +109,46 @@ body{
 </form>
 
 </div>
-<script src="assets/js/system.js"></script>
-<script src="assets/js/common.js"></script>
+<script type="module">
+  import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { auth, db } from "./assets/js/common.js";
 
+  const form = document.getElementById("loginForm");
 
-
-
-<script>
-document.addEventListener("DOMContentLoaded",function(){
-  var form=document.getElementById('loginForm');
-  form.addEventListener('submit',function(e){
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    ohsmsHandleLogin(form,'ar');
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      alert("بيانات الدخول غير صحيحة");
+    }
   });
-});
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) return;
+
+    const snap = await getDoc(doc(db, "users", user.uid));
+    if (!snap.exists()) {
+      alert("هذا الحساب غير مهيأ في النظام");
+      return;
+    }
+
+    const userData = snap.data();
+    if (userData.active === false) {
+      alert("الحساب موقوف");
+      return;
+    }
+
+    // نجاح
+    location.href = "index.html";
+  });
 </script>
+
 
 </body>
 </html>

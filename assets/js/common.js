@@ -1,159 +1,33 @@
+// =======================================
+// OHSMS COMMON CORE
+// Firebase Initialization + Auth Export
+// =======================================
 
-function loadReports(){
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  try {
-    return JSON.parse(localStorage.getItem('reports') || '[]');
-  } catch(e){
-    return [];
-  }
-}
+// 🔹 Firebase Config (كما هو عندك)
+const firebaseConfig = {
+  apiKey: "AIzaSyAr3rWfrom-UYZ09Talx5vb6VRh2Q-9U",
+  authDomain: "ohsmsipa.firebaseapp.com",
+  projectId: "ohsmsipa",
+  storageBucket: "ohsmsipa.firebasestorage.app",
+  messagingSenderId: "161259414430",
+  appId: "1:161259414430:web:d7d1fe0d98a552f3c6ec8f"
+};
 
-function saveReports(arr){
-  localStorage.setItem('reports', JSON.stringify(arr));
-}
+// 🔹 Initialize Firebase (مرة واحدة فقط)
+const app = initializeApp(firebaseConfig);
 
-function generateReportId(){
-  const year = new Date().getFullYear();
-  const list = loadReports();
-  let max = 0;
+// 🔹 Export Auth & DB (المصدر الوحيد في النظام)
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 
-  list.forEach(r => {
-   if (String(r.id).startsWith(String(year))) {
+// 🔹 Global currentUser (للاستخدام في الصفحات)
+export let currentUser = null;
 
-      const p = r.id.split('-');
-      if (p.length === 2) {
-        const n = parseInt(p[1]);
-        if (!isNaN(n) && n > max) max = n;
-      }
-    }
-  });
-
-  const next = max + 1;
-  return year + '-' + String(next).padStart(4, '0');
-}
-
-function nowStr(){
-  return new Date().toLocaleString();
-}
-
-function resetMsg(){
-  const m = document.getElementById('homeMsg');
-  if (m) m.textContent = '';
-}
-
-function openModal(type){
-  resetMsg();
-  document.getElementById('modal-' + type).classList.remove('hidden');
-}
-
-function openUrgent(){
-  resetMsg();
-  document.getElementById('modal-urgent').classList.remove('hidden');
-}
-
-function closeModal(){
-  document.querySelectorAll('.modal')
-    .forEach(m => m.classList.add('hidden'));
-}
-
-function submitNormal(){
-  const desc = document.getElementById('n-desc').value.trim();
-  if (!desc) {
-    alert('الرجاء كتابة وصف البلاغ.');
-    return;
-  }
-
-  const report = {
-    id: generateReportId(),
-    type: 'عادي',
-    reporterName: document.getElementById('n-name').value.trim() || 'غير محدد',
-    contact: document.getElementById('n-contact').value.trim() || 'غير محدد',
-    location: document.getElementById('n-location').value.trim() || 'غير محدد',
-    danger: document.getElementById('n-danger').value.trim() || '',
-    desc: desc,
-    reasonSecret: '',
-    statusIndex: 0,
-    status: 'تم إرسال البلاغ',
-    createdAt: nowStr(),
-    history: [{ action:'إدخال البلاغ (عادي)', note:'', at: nowStr() }],
-    escalationLevel: 0
-  };
-
-  const list = loadReports();
-  list.push(report);
-  saveReports(list);
-
-  closeModal();
-  document.getElementById('homeMsg').textContent =
-    'تم إرسال البلاغ بنجاح، رقم البلاغ: ' + report.id;
-
-  ['n-name','n-contact','n-location','n-danger','n-desc']
-    .forEach(id => document.getElementById(id).value = '');
-}
-
-function submitSecret(){
-  const desc = document.getElementById('s-desc').value.trim();
-  const reason = document.getElementById('s-reason').value.trim();
-
-  if (!desc) {
-    alert('الرجاء كتابة وصف البلاغ.');
-    return;
-  }
-  if (!reason) {
-    alert('الرجاء توضيح سبب اختيار البلاغ السري.');
-    return;
-  }
-
-  const report = {
-    id: generateReportId(),
-    type: 'سري',
-    reporterName: 'سري / غير معلن',
-    contact: 'غير متاح (بلاغ سري)',
-    location: document.getElementById('s-location').value.trim() || 'غير محدد',
-    danger: '',
-    desc: desc,
-    reasonSecret: reason,
-    statusIndex: 0,
-    status: 'تم إرسال البلاغ',
-    createdAt: nowStr(),
-    history: [{ action:'إدخال البلاغ (سري)', note:'', at: nowStr() }],
-    escalationLevel: 0
-  };
-
-  const list = loadReports();
-  list.push(report);
-  saveReports(list);
-
-  closeModal();
-  document.getElementById('homeMsg').textContent =
-    'تم إرسال البلاغ السري بنجاح، رقم البلاغ: ' + report.id;
-
-  ['s-location','s-desc','s-reason']
-    .forEach(id => document.getElementById(id).value = '');
-}
-
-function submitUrgent(){
-  const report = {
-    id: generateReportId(),
-    type: 'عاجل',
-    reporterName: 'غير محدد',
-    contact: 'يتم التواصل فوراً (بلاغ عاجل)',
-    location: 'غير محدد',
-    danger: '',
-    desc: 'بلاغ عاجل تم إدخاله من الواجهة الرئيسية.',
-    reasonSecret: '',
-    statusIndex: 0,
-    status: 'تم إرسال البلاغ',
-    createdAt: nowStr(),
-    history: [{ action:'تسجيل بلاغ عاجل', note:'', at: nowStr() }],
-    escalationLevel: 0
-  };
-
-  const list = loadReports();
-  list.push(report);
-  saveReports(list);
-
-  closeModal();
-  document.getElementById('homeMsg').textContent =
-    'تم تسجيل بلاغ عاجل بنجاح، رقم البلاغ: ' + report.id;
-}
+// 🔹 مراقبة حالة الدخول
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+});

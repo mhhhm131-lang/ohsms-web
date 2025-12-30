@@ -186,7 +186,11 @@
 <script src="assets/js/app-config.js"></script>
 <script src="assets/js/app-shell.js"></script>
 <script src="assets/js/system.js"></script>
-<script src="assets/js/common.js"></script>
+<script type="module" src="assets/js/common.js"></script>
+<script type="module">
+  import "./assets/js/system.js";
+  ohsmsRequireAuth("view_system");
+</script>
 
 </body>
 </html>

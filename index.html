@@ -7,226 +7,113 @@
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
+
 <header class="top-header">
   <h1>نظام إدارة السلامة والصحة المهنية – OHSMS</h1>
   <p>الصفحة الرئيسية – إدخال البلاغات</p>
 </header>
 
 <div class="main-wrapper">
-      
- <aside class="sidebar">
-<h3>القائمة الرئيسية</h3>
+  <aside class="sidebar">
+    <h3>القائمة الرئيسية</h3>
 
-<a class="nav-link" href="index.html" data-perm="view_home">الصفحة الرئيسية</a>
-<a class="nav-link" href="reports.html" data-perm="view_reports">نظام البلاغات / سجل المتابعة</a>
-<a class="nav-link" href="risk.html" data-perm="view_risks">إدارة المخاطر</a>
-<a class="nav-link" href="awareness.html" data-perm="view_awareness">التوعية والتثقيف</a>
-<a class="nav-link" href="vendors.html" data-perm="view_partners">العملاء والشركاء</a>
-<a class="nav-link" href="forms.html" data-perm="view_forms">النماذج الرقمية</a>
-<a class="nav-link" href="dashboard.html" data-perm="view_dashboard">لوحة التحكم</a>
-<a class="nav-link" href="admin.html" data-perm="view_system">إدارة النظام</a>
-
-</aside>
-
-
-
-
-
-
+    <a class="nav-link" href="index.html" data-perm="view_home">الصفحة الرئيسية</a>
+    <a class="nav-link" href="reports.html" data-perm="view_reports">نظام البلاغات / سجل المتابعة</a>
+    <a class="nav-link" href="risk.html" data-perm="view_risks">إدارة المخاطر</a>
+    <a class="nav-link" href="awareness.html" data-perm="view_awareness">التوعية والتثقيف</a>
+    <a class="nav-link" href="vendors.html" data-perm="view_partners">العملاء والشركاء</a>
+    <a class="nav-link" href="forms.html" data-perm="view_forms">النماذج الرقمية</a>
+    <a class="nav-link" href="dashboard.html" data-perm="view_dashboard">لوحة التحكم</a>
+    <a class="nav-link" href="admin.html" data-perm="view_system">إدارة النظام</a>
+  </aside>
 
   <main class="content">
+
     <section class="card">
       <h2><span class="emoji">🏠</span>الصفحة الرئيسية للنظام</h2>
-      <p class="hint">هذا هو مركز النظام، يمكنك من خلاله إدخال البلاغات ثم متابعتها من صفحة "نظام البلاغات / سجل المتابعة".</p>
+      <p class="hint">هذا هو مركز النظام، يمكنك من خلاله إدخال البلاغات ثم متابعتها.</p>
 
       <div class="grid-3">
         <div class="info-box info-policy">
           <strong>السياسة</strong>
- <p id="homePolicyText">
-  تلتزم المنشأة بتطبيق أعلى معايير السلامة...
-</p>
-      </div>
+          <p id="homePolicyText">
+            تلتزم المنشأة بتطبيق أعلى معايير السلامة...
+          </p>
+        </div>
+
         <div class="info-box info-goals">
           <strong>الأهداف</strong>
-<ul id="goalsText" style="margin-right:18px;margin-top:4px">
+          <ul id="goalsText">
             <li>تقليل الحوادث المهنية.</li>
             <li>رفع الوعي بالسلامة.</li>
             <li>تحسين الالتزام بالتعليمات.</li>
           </ul>
         </div>
+
         <div class="info-box info-scope">
           <strong>النطاق</strong>
- <p id="scopeText">يشمل النظام جميع الفروع والإدارات والأنشطة التشغيلية.</p>
-       </div>
+          <p id="scopeText">
+            يشمل النظام جميع الفروع والإدارات والأنشطة التشغيلية.
+          </p>
+        </div>
       </div>
     </section>
-<!-- إدارة الصفحة الرئيسية (للمدير فقط) -->
-<div class="card admin-only" id="homeAdminPanel" style="display:none">
-  <h3>⚙️ إدارة محتوى الصفحة الرئيسية</h3>
 
-  <label>السياسة</label>
-  <textarea id="policyInput" rows="3"></textarea>
+    <!-- لوحة الإدارة (تظهر فقط بعد تسجيل الدخول) -->
+    <div class="card admin-only" id="homeAdminPanel" style="display:none">
+      <h3>⚙️ إدارة محتوى الصفحة الرئيسية</h3>
 
-  <label>الأهداف</label>
-  <textarea id="goalsInput" rows="3"></textarea>
+      <label>السياسة</label>
+      <textarea id="policyInput" rows="3"></textarea>
 
-  <label>النطاق</label>
-  <textarea id="scopeInput" rows="3"></textarea>
+      <label>الأهداف</label>
+      <textarea id="goalsInput" rows="3"></textarea>
 
-  <button class="btn primary" onclick="saveHomeContent()">💾 حفظ التغييرات</button>
-</div>
+      <label>النطاق</label>
+      <textarea id="scopeInput" rows="3"></textarea>
+
+      <button class="btn primary" onclick="saveHomeContent()">💾 حفظ التغييرات</button>
+    </div>
 
     <section class="card">
       <h2><span class="emoji">📝</span>إدخال بلاغ جديد</h2>
-      <p class="hint">اختر نوع البلاغ من الأزرار التالية. سيتم حفظ جميع البلاغات في سجل المتابعة.</p>
+      <p class="hint">اختر نوع البلاغ من الأزرار التالية.</p>
+
       <div class="report-actions">
         <button class="btn btn-normal" onclick="openModal('normal')">📄 بلاغ عادي</button>
         <button class="btn btn-urgent" onclick="openUrgent()">🚨 بلاغ عاجل</button>
         <button class="btn btn-secret" onclick="openModal('secret')">🔒 بلاغ سري</button>
       </div>
-  
+
       <div id="homeMsg" class="success-msg"></div>
     </section>
+
   </main>
 </div>
 
-<!-- مودال بلاغ عادي -->
-<div id="modal-normal" class="modal hidden">
-  <div class="modal-box">
-    <h3>🔵 بلاغ عادي</h3>
-    <p class="modal-hint">يُستخدم للبلاغات العامة التي لا تتطلب سرية أو عاجلية.</p>
-    <label>اسم المبلّغ</label>
-    <input id="n-name" class="input" placeholder="اختياري">
-    <label>وسيلة التواصل (جوال / بريد إلكتروني)</label>
-    <input id="n-contact" class="input" placeholder="اختياري – للتواصل عند الحاجة">
-    <label>الموقع / الجهة / الفرع</label>
-    <input id="n-location" class="input" placeholder="مثال: مبنى رقم 3 – الدور الثاني">
-    <label>نوع الخطر</label>
-    <input id="n-danger" class="input" placeholder="مثال: خطر كهربائي، منزلقات، مواد كيميائية">
-    <label>وصف البلاغ</label>
-    <textarea id="n-desc" class="textarea" placeholder="اكتب هنا تفاصيل البلاغ..."></textarea>
-    <div class="modal-actions">
-      <button class="btn btn-primary" onclick="submitNormal()">إرسال البلاغ</button>
-      <button class="btn btn-secondary" onclick="closeModal()">إغلاق</button>
-    </div>
-  </div>
-</div>
-
-<!-- مودال بلاغ سري -->
-<div id="modal-secret" class="modal hidden">
-  <div class="modal-box">
-    <h3>🟣 بلاغ سري</h3>
-    <p class="modal-hint">لن يتم تسجيل اسمك في النظام، وسيُعامل البلاغ بسرية. الرجاء توضيح سبب اختيار البلاغ السري.</p>
-    <label>الموقع / الجهة / الفرع</label>
-    <input id="s-location" class="input" placeholder="مثال: مستودع المواد – المنطقة الخلفية">
-    <label>وصف البلاغ</label>
-    <textarea id="s-desc" class="textarea" placeholder="اكتب هنا تفاصيل البلاغ..."></textarea>
-    <label>لماذا اخترت أن يكون البلاغ سرياً؟</label>
-    <textarea id="s-reason" class="textarea" placeholder="هذا الحقل إلزامي في البلاغ السري."></textarea>
-    <div class="modal-actions">
-      <button class="btn btn-primary" onclick="submitSecret()">إرسال البلاغ السري</button>
-      <button class="btn btn-secondary" onclick="closeModal()">إغلاق</button>
-    </div>
-  </div>
-</div>
-
-<!-- مودال بلاغ عاجل -->
-<div id="modal-urgent" class="modal hidden">
-  <div class="modal-box">
-    <h3>🔴 بلاغ عاجل</h3>
-    <p class="modal-hint">يُستخدم للحالات الطارئة التي تتطلب تدخلاً فورياً. يمكن تخصيص هذه النافذة لاحقاً لإضافة أزرار اتصال مباشر أو واتساب.</p>
-    <div class="modal-actions">
-      <button class="btn btn-primary" onclick="submitUrgent()">تأكيد تسجيل بلاغ عاجل</button>
-      <button class="btn btn-secondary" onclick="closeModal()">إغلاق</button>
-    </div>
-  </div>
-</div>
-
-<script src="assets/js/common.js"></script>
-
+<!-- ===== Scripts ===== -->
+<script type="module" src="assets/js/common.js"></script>
 <script src="assets/js/system.js"></script>
+
 <script>
-  // إخفاء روابط القائمة حسب صلاحيات المستخدم الحالي
-  
-document.addEventListener("DOMContentLoaded", function () {
+/* إخفاء عناصر القائمة حسب الصلاحيات (إن كان المستخدم مسجّل) */
+document.addEventListener("DOMContentLoaded", () => {
 
-  const user = ohsmsGetCurrentUser();
+  if (!window.currentUser) return;
 
-  // إذا مافيه مستخدم، لا نخفي شيء
-  if(!user){
-    return;
-  }
-
-  // إذا فيه مستخدم نبدأ نفحص الصلاحيات
-  var items = document.querySelectorAll("[data-perm]");
-  items.forEach(function (item) {
-    var perm = item.getAttribute("data-perm");
+  document.querySelectorAll("[data-perm]").forEach(el => {
+    const perm = el.getAttribute("data-perm");
     if (perm && !ohsmsHasPermission(perm)) {
-      item.style.display = "none";
+      el.style.display = "none";
     }
   });
-});
-</script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const savedPolicy = localStorage.getItem("ohsms_home_policy");
-  if (savedPolicy) {
-    const el = document.getElementById("homePolicyText");
-    if (el) el.textContent = savedPolicy;
+  // إظهار لوحة الإدارة لمدير النظام فقط
+  if (window.currentUser.role === "system_admin") {
+    const panel = document.getElementById("homeAdminPanel");
+    if (panel) panel.style.display = "block";
   }
 });
-</script>
-
-<!-- Home Policy Editor Modal -->
-<div class="modal hidden" id="homePolicyModal">
-  <div class="modal-box wide">
-    <h3>✏️ تعديل محتوى الصفحة الرئيسية</h3>
-    <p class="modal-hint">يمكنك تعديل السياسة والأهداف والنطاق ثم حفظها.</p>
-
-    <label>السياسة</label>
-    <textarea id="editPolicyText" class="input" rows="3"></textarea>
-
-    <label>الأهداف (سطر لكل هدف)</label>
-    <textarea id="editGoalsText" class="input" rows="4"></textarea>
-
-    <label>النطاق</label>
-    <textarea id="editScopeText" class="input" rows="3"></textarea>
-
-    <div class="modal-actions">
-      <button class="btn btn-primary" onclick="saveHomePolicy()">💾 حفظ</button>
-      <button class="btn" onclick="closeHomePolicyEditor()">إلغاء</button>
-    </div>
-  </div>
-</div>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword } 
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAr3rWfrom-UYZ09Talx5vb6VRh2Q-9U",
-    authDomain: "ohsmsipa.firebaseapp.com",
-    projectId: "ohsmsipa",
-    storageBucket: "ohsmsipa.firebasestorage.app",
-    messagingSenderId: "161259414430",
-    appId: "1:161259414430:web:d7d1fe0d98a552f3c6ec8f"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  document.getElementById("loginBtn").onclick = async () => {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      window.location.href = "dashboard.html";
-    } catch (e) {
-      alert("بيانات الدخول غير صحيحة");
-    }
-  };
 </script>
 
 </body>
