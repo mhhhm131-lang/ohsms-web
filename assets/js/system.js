@@ -1,171 +1,143 @@
-import { auth, db } from "./common.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-/* =====================================================
-   OHSMS – SYSTEM AUTH CORE (Firebase Based)
-   ===================================================== */
+// ======================================================
+// OHSMS AUTH + PERMISSIONS (FIREBASE ONLY - FINAL)
+// ======================================================
 
-/* ===============================
-   ROLES & PERMISSIONS
-================================ */
-const OHSMS_ROLES = {
-  system_admin: { permissions: ["*"] },
+import { auth, db } from "./firebase-init.js";
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  system_operator: {
-    permissions: [
-      "view_home","view_dashboard","view_reports","view_risks",
-      "view_awareness","view_forms","view_partners",
-      "view_all_reports","receive_report","assign_report",
-      "add_report_notes_global","add_risk_notes_global",
-      "assign_forms","manage_awareness"
-    ]
-  },
+import {
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  top_management: {
-    permissions: [
-      "view_home","view_dashboard","view_reports","view_risks",
-      "view_awareness","view_forms",
-      "view_all_reports",
-      "add_report_notes_global",
-      "add_risk_notes_global"
-    ]
-  },
+// ===============================
+// SESSION KEY
+// ===============================
+const AUTH_KEY = "ohsms_user";
 
-  ohs_committee: {
-    permissions: [
-      "view_home","view_dashboard","view_reports","view_risks",
-      "view_awareness","view_forms",
-      "view_all_reports",
-      "add_report_notes_global",
-      "add_risk_notes_global",
-      "add_public_risk","escalate_report"
-    ]
-  },
+// ===============================
+// SAVE / LOAD USER
+// ===============================
+function setUser(user) {
+  sessionStorage.setItem(AUTH_KEY, JSON.stringify(user));
+}
 
-  branch_manager: {
-    permissions: [
-      "view_dashboard","view_reports","view_risks",
-      "view_assigned_reports",
-      "add_report_notes_scoped",
-      "escalate_report","close_report",
-      "approve_private_risk","add_risk_notes_scoped"
-    ]
-  },
+function getUser() {
+  try {
+    return JSON.parse(sessionStorage.getItem(AUTH_KEY));
+  } catch {
+    return null;
+  }
+}
 
-  department_manager: {
-    permissions: [
-      "view_dashboard","view_reports","view_risks",
-      "view_assigned_reports",
-      "add_report_notes_scoped",
-      "escalate_report","close_report",
-      "approve_private_risk","add_risk_notes_scoped"
-    ]
-  },
+function clearUser() {
+  sessionStorage.removeItem(AUTH_KEY);
+}
 
-  section_manager: {
-    permissions: [
-      "view_dashboard","view_reports","view_risks",
-      "view_assigned_reports",
-      "add_report_notes_scoped",
-      "escalate_report","close_report",
-      "approve_private_risk","add_risk_notes_scoped"
-    ]
-  },
+// ===============================
+// ROLES & PERMISSIONS
+// ===============================
+const ROLES = {
+  system_admin: ["*"],
+  ohsms_committee: [
+    "view_home",
+    "view_reports",
+    "view_risks",
+    "view_awareness",
+    "view_forms",
+    "view_dashboard"
+  ],
+  employee: [
+    "view_home",
+    "submit_report",
+    "view_awareness"
+  ]
+};
 
-  safety_coordinator: {
-    permissions: [
-      "view_dashboard","view_reports","view_risks",
-      "view_assigned_reports",
-      "accept_assignment","assign_report",
-      "add_report_notes_scoped",
-      "add_private_risk","add_risk_notes_scoped"
-    ]
-  },
+// ===============================
+// PERMISSION CHECK
+// ===============================
+window.ohsmsHasPermission = function (perm) {
+  const user = getUser();
+  if (!user) return false;
+  const perms = ROLES[user.role] || [];
+  if (perms.includes("*")) return true;
+  return perms.includes(perm);
+};
 
-  safety_executor: {
-    permissions: [
-      "view_assigned_reports",
-      "accept_assignment",
-      "update_corrective_action",
-      "add_report_notes_scoped",
-      "close_report","escalate_report"
-    ]
-  },
+// ===============================
+// LOGIN
+// ===============================
+window.ohsmsHandleLogin = async function (form) {
+  const email = form.querySelector("#username").value.trim();
+  const password = form.querySelector("#password").value.trim();
 
-  employee: {
-    permissions: [
-      "view_home","view_awareness","view_risks",
-      "view_private_risks_scoped",
-      "submit_report","fill_assigned_forms"
-    ]
-  },
+  if (!email || !password) {
+    alert("أدخل البريد الإلكتروني وكلمة المرور");
+    return;
+  }
 
-  partner: {
-    permissions: [
-      "view_home","view_awareness",
-      "submit_report","fill_assigned_forms"
-    ]
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    const uid = cred.user.uid;
+
+    const snap = await getDoc(doc(db, "users", uid));
+    if (!snap.exists()) {
+      alert("لا يوجد دور للمستخدم في النظام");
+      await signOut(auth);
+      return;
+    }
+
+    setUser({
+      uid,
+      email,
+      role: snap.data().role
+    });
+
+    location.href = "index.html";
+  } catch (e) {
+    alert("بيانات الدخول غير صحيحة");
   }
 };
 
-/* ===============================
-   AUTH GUARD (GLOBAL)
-================================ */
-window.ohsmsRequireAuth = function (requiredPermission = null) {
-  return new Promise((resolve) => {
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        location.href = "login.html";
-        return;
-      }
+// ===============================
+// AUTH GUARD
+// ===============================
+window.ohsmsRequireAuth = function (permission) {
+  onAuthStateChanged(auth, async (fbUser) => {
+    if (!fbUser) {
+      location.href = "login.html";
+      return;
+    }
 
-      const snap = await getDoc(doc(db, "users", user.uid));
-      if (!snap.exists()) {
-        alert("❌ حسابك غير مهيأ في النظام");
-        location.href = "login.html";
-        return;
-      }
+    const snap = await getDoc(doc(db, "users", fbUser.uid));
+    if (!snap.exists()) {
+      location.href = "login.html";
+      return;
+    }
 
-      const userData = snap.data();
-
-      if (userData.active === false) {
-        alert("⛔ الحساب موقوف");
-        location.href = "login.html";
-        return;
-      }
-
-      const roleDef = OHSMS_ROLES[userData.role];
-      if (!roleDef) {
-        alert("❌ دور المستخدم غير معرف");
-        location.href = "login.html";
-        return;
-      }
-
-      if (
-        requiredPermission &&
-        !roleDef.permissions.includes("*") &&
-        !roleDef.permissions.includes(requiredPermission)
-      ) {
-        alert("🚫 غير مصرح لك بالدخول");
-        location.href = "index.html";
-        return;
-      }
-
-      window.currentUser = { uid: user.uid, ...userData };
-      resolve(window.currentUser);
+    setUser({
+      uid: fbUser.uid,
+      email: fbUser.email,
+      role: snap.data().role
     });
+
+    if (permission && !ohsmsHasPermission(permission)) {
+      alert("غير مصرح لك بالدخول");
+      location.href = "index.html";
+    }
   });
 };
 
-/* ===============================
-   PERMISSION CHECK (OPTIONAL)
-================================ */
-window.ohsmsHasPermission = function (perm) {
-  if (!window.currentUser) return false;
-
-  const role = OHSMS_ROLES[window.currentUser.role];
-  if (!role) return false;
-
-  if (role.permissions.includes("*")) return true;
-  return role.permissions.includes(perm);
+// ===============================
+// LOGOUT
+// ===============================
+window.ohsmsLogout = async function () {
+  await signOut(auth);
+  clearUser();
+  location.href = "login.html";
 };

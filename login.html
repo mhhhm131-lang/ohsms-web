@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="assets/css/styles.css">
 
 <style>
-/* خلفية حكومية */
 body{
   background:#f1f5f9;
   font-family:"Tajawal",sans-serif;
@@ -16,8 +15,6 @@ body{
   padding:0;
   color:#1e293b;
 }
-
-/* صندوق الدخول */
 .login-container{
   max-width:380px;
   margin:70px auto;
@@ -27,15 +24,11 @@ body{
   box-shadow:0 8px 30px rgba(0,0,0,.08);
   border-top:5px solid #0b3d90;
 }
-
-/* عنوان */
 .login-container h2{
   margin:0;
   color:#0b3d90;
   font-size:22px;
 }
-
-/* الحقول */
 .login-container input{
   width:100%;
   padding:12px;
@@ -43,8 +36,6 @@ body{
   border:1px solid #cbd5e1;
   border-radius:6px;
 }
-
-/* زر */
 .login-container button{
   width:100%;
   padding:12px;
@@ -55,13 +46,7 @@ body{
   border-radius:6px;
   cursor:pointer;
   font-size:16px;
-  transition:.2s;
 }
-.login-container button:hover{
-  background:#0a3377;
-}
-
-/* ملاحظة */
 .login-small{
   font-size:13px;
   color:#475569;
@@ -74,81 +59,47 @@ body{
 }
 .gov-logo img{
   width:120px;
-  opacity:.9;
 }
 </style>
-
 </head>
+
 <body>
 
 <div class="login-container">
-  
   <div class="gov-logo">
-    <img src="assets/img/logo.png" alt="logo"> 
+    <img src="assets/img/logo.png" alt="logo">
   </div>
 
   <h2>الدخول إلى نظام OHSMS</h2>
   <p style="margin-top:8px;color:#475569">فضلاً أدخل بيانات الدخول</p>
 
- <form id="loginForm">
+  <form id="loginForm">
+    <label>البريد الإلكتروني</label>
+    <input id="username" type="email" placeholder="admin@ohsms.local" required>
 
- <label>البريد الإلكتروني</label>
-<input id="email" name="email" type="email" placeholder="admin@ohsms.local" required>
+    <label style="margin-top:12px;">كلمة المرور</label>
+    <input id="password" type="password" placeholder="كلمة المرور" required>
 
+    <button type="submit">تسجيل الدخول</button>
 
-  <label style="margin-top:12px;">كلمة المرور</label>
-  <input id="password" name="password" type="password" placeholder="كلمة المرور">
-
-  <button type="submit">تسجيل الدخول</button>
-
-  <div class="login-small" style="margin-top:12px;">
-    حسابات تجريبية: admin / system / employee  
-    كلمة المرور = 1234
-  </div>
-
-</form>
-
+    <div class="login-small">
+      استخدم البريد الإلكتروني وكلمة المرور المسجلة في النظام
+    </div>
+  </form>
 </div>
-<script type="module">
-  import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { auth, db } from "./assets/js/common.js";
 
+<!-- النظام الموحد -->
+<script src="assets/js/system.js" type="module"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("loginForm");
-
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", function(e){
     e.preventDefault();
-
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (err) {
-      alert("بيانات الدخول غير صحيحة");
-    }
+    ohsmsHandleLogin(form);
   });
-
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) return;
-
-    const snap = await getDoc(doc(db, "users", user.uid));
-    if (!snap.exists()) {
-      alert("هذا الحساب غير مهيأ في النظام");
-      return;
-    }
-
-    const userData = snap.data();
-    if (userData.active === false) {
-      alert("الحساب موقوف");
-      return;
-    }
-
-    // نجاح
-    location.href = "index.html";
-  });
+});
 </script>
-
 
 </body>
 </html>
